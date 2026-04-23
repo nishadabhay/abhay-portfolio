@@ -5,16 +5,16 @@ import { Github, Linkedin, Mail, Heart } from "lucide-react";
 
 export function Footer() {
   const socialLinks = [
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Mail, href: "mailto:abhaynishad@example.com", label: "Email" },
+    { icon: Github, href: "https://github.com/nishadabhay", label: "GitHub" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/abhay-nishad-ba64651ab/", label: "LinkedIn" },
+    { icon: Mail, href: "mailto:imabhaynishad@gmail.com", label: "Email" },
   ];
 
   return (
     <footer className="py-8 border-t border-border bg-secondary/20">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <motion.p
+       <div className="flex items-center justify-center gap-6">
+          {/* <motion.p
             className="text-sm text-muted-foreground flex items-center gap-1"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -29,9 +29,9 @@ export function Footer() {
               <Heart className="h-4 w-4 text-red-500 fill-red-500" />
             </motion.span>{" "}
             by <span className="text-primary font-medium">Abhay Nishad</span>
-          </motion.p>
+          </motion.p> */}
 
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             {socialLinks.map((social, index) => (
               <motion.a
                 key={social.label}
@@ -47,7 +47,7 @@ export function Footer() {
                 <social.icon className="h-5 w-5" />
               </motion.a>
             ))}
-          </div>
+          </div> */}
 
           <motion.p
             className="text-sm text-muted-foreground"

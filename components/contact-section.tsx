@@ -6,6 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Github, Linkedin, Send } from "lucide-react";
+import emailjs from "@emailjs/browser";
+
+const EMAILJS_SERVICE_ID = "service_u4cqnnp";
+const EMAILJS_TEMPLATE_ID = "template_625pj71";
+const EMAILJS_PUBLIC_KEY = "CRSMpzU22goZ2wTVJ";
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -14,14 +19,39 @@ export function ContactSection() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSubmitting(false);
-    setFormData({ name: "", email: "", message: "" });
-    alert("Message sent successfully!");
+    setStatus("idle");
+    setErrorMsg("");
+
+    try {
+      const result = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          title: `Message from ${formData.name}`,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+
+      console.log("EmailJS Success:", result);
+      setStatus("success");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error: any) {
+      const msg = error?.text || error?.message || JSON.stringify(error);
+      console.error("EmailJS Error Details:", msg);
+      setErrorMsg(msg);
+      setStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const socialLinks = [
@@ -173,6 +203,26 @@ export function ContactSection() {
                 />
               </motion.div>
 
+              {/* Status Messages */}
+              {status === "success" && (
+                <motion.p
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-green-500 text-sm font-medium text-center"
+                >
+                  ✅ Message sent! I&apos;ll get back to you soon.
+                </motion.p>
+              )}
+              {status === "error" && (
+                <motion.p
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-red-500 text-sm font-medium text-center"
+                >
+                  ❌ Error: {errorMsg || "Something went wrong. Please try again."}
+                </motion.p>
+              )}
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -189,7 +239,7 @@ export function ContactSection() {
                       <motion.span
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        className="mr-2"
+                        className="mr-2 inline-block"
                       >
                         <Send className="h-4 w-4" />
                       </motion.span>
